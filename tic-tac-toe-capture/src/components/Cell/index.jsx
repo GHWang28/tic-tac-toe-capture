@@ -14,7 +14,7 @@ function Cell ({ children, id, cellNo }) {
     <Box
       ref={setNodeRef}
       sx={{
-        bgcolor: (isOver) ? 'rgba(255,255,255,0.1)' : '',
+        bgcolor: (isOver) ? 'rgba(255,255,255,0.25)' : '',
         width: '100%',
         height: '100%',
         display: 'flex',
