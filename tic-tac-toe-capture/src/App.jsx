@@ -224,6 +224,7 @@ function App() {
       if (gameboard2D[placedY][x]?.playerNo !== playerTurn) break;
       if (x === dimension - 1)  {
         setWinner(playerTurn);
+        setLetUndo(false);
         return;
       }
     }
@@ -232,6 +233,7 @@ function App() {
       if (gameboard2D[y][placedX]?.playerNo !== playerTurn) break;
       if (y === dimension - 1) {
         setWinner(playerTurn);
+        setLetUndo(false);
         return;
       }
     }
@@ -241,6 +243,7 @@ function App() {
         if (gameboard2D[coord][coord]?.playerNo !== playerTurn) break;
         if (coord === dimension - 1)  {
           setWinner(playerTurn);
+          setLetUndo(false);
           return;
         }
       }
@@ -251,6 +254,7 @@ function App() {
         if (gameboard2D[coord][(dimension - 1) - coord]?.playerNo !== playerTurn) break;
         if (coord === dimension - 1)  {
           setWinner(playerTurn);
+          setLetUndo(false);
           return;
         }
       }
