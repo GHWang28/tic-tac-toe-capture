@@ -16,7 +16,7 @@ function App() {
   const totalCardsPerSize = 2;
   const boardVisualDim = '60vh';
 
-  const [play] = useSound(CardSfx);
+  const [playCardSfx] = useSound(CardSfx);
 
   const [containerHeight, setContainerHeight] = useState(0);
   const ref = useRef(null);
@@ -181,7 +181,7 @@ function App() {
     setGameboard(newGameboard);
     setError(null);
     setUsedCards([...usedCards, active.id]);
-    play();
+    playCardSfx();
   
     // Check game has been won
     const gameboardCopy = [...newGameboard];
