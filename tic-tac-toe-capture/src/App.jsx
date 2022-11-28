@@ -319,6 +319,7 @@ function App() {
     if (!foundPossibleMove) {
       setWinner(DRAW);
       setLetUndo(false);
+      setPlayerTurn((playerTurn + 1) % totalPlayers);
       return;
     }
 
