@@ -6,6 +6,8 @@ import CardPlayer from './components/CardPlayer';
 import Cell from './components/Cell';
 import CardContainer from './components/CardContainer';
 import ButtonReset from './components/ButtonReset';
+import useSound from 'use-sound';
+import CardSfx from './sfx/card.ogg'
 
 function App() {
   const dimension = 3;
@@ -13,6 +15,8 @@ function App() {
   const totalSizes = 3;
   const totalCardsPerSize = 2;
   const boardVisualDim = '60vh';
+
+  const [play] = useSound(CardSfx);
 
   const [containerHeight, setContainerHeight] = useState(0);
   const ref = useRef(null);
@@ -177,6 +181,7 @@ function App() {
     setGameboard(newGameboard);
     setError(null);
     setUsedCards([...usedCards, active.id]);
+    play();
   
     // Check game has been won
     const gameboardCopy = [...newGameboard];
