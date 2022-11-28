@@ -49,7 +49,6 @@ function App() {
   })
 
   // Sensors
-  
   const sensors = useSensors(
     useSensor(MouseSensor),
     useSensor(TouchSensor)
