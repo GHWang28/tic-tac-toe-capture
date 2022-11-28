@@ -8,7 +8,7 @@ function ButtonInfo ({ onClick }) {
       sx={{ color: 'white', border: '2px solid whitesmoke' }}
       title='How To Play'
     >
-      <InfoIcon fontSize='large'/>
+      <InfoIcon />
     </IconButton>
   )
 }

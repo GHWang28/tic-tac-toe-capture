@@ -8,7 +8,7 @@ function ButtonReset ({ onClick }) {
       sx={{ color: 'white', border: '2px solid whitesmoke' }}
       title='Reset Game'
     >
-      <ReplayIcon fontSize='large'/>
+      <ReplayIcon />
     </IconButton>
   )
 }

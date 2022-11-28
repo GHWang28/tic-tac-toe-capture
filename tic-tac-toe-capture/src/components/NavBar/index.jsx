@@ -2,7 +2,7 @@ import { Alert, Box, Typography } from "@mui/material";
 
 function NavBar ({ error, playerTurn, resetButton, undoButton, infoButton }) {
   return (
-    <Box px={10} sx={{ width: '100%', display: 'flex', bgcolor: '#444c57', alignItems: 'center', position: 'relative', height: '6vh'}} >
+    <Box px={10} sx={{ width: '100%', display: 'flex', bgcolor: '#444c57', alignItems: 'center', position: 'relative', height: '7vh'}} >
       {(error) && (
         <Alert
           severity='error'

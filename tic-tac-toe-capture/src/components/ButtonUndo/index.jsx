@@ -7,9 +7,9 @@ function ButtonUndo ({ onClick, disabled }) {
       disabled={disabled}
       onClick={onClick}
       sx={{ color: 'white', border: '2px solid whitesmoke' }}
-      title='Undo the immediate previous move'
+      title='Reverses the immediate previous move'
     >
-      <UndoIcon fontSize='large'/>
+      <UndoIcon />
     </IconButton>
   )
 }
