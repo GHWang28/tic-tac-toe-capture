@@ -1,7 +1,13 @@
 import './App.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Grid } from '@mui/material'
-import { DndContext } from '@dnd-kit/core';
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import CardPlayer from './components/CardPlayer';
 import Cell from './components/Cell';
 import CardContainer from './components/CardContainer';
@@ -42,9 +48,18 @@ function App() {
     })
   })
 
+  // Sensors
+  
+  const sensors = useSensors(
+    useSensor(MouseSensor),
+    useSensor(TouchSensor)
+  );
+
+  // Sound
   const [playCardSfx] = useSound(CardSfx);
   const [playErrorSfx] = useSound(ErrorSfx);
 
+  // Height of card containers
   const [containerHeight, setContainerHeight] = useState(0);
   const ref = useRef(null);
 
@@ -101,7 +116,7 @@ function App() {
 
   // App Structure
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
       <Box
         name='game-container'
         sx={{
