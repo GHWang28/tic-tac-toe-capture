@@ -8,4 +8,4 @@
 * You can override your opponent's symbols by placing your symbol over it if your symbol is larger than the target symbol.
 * The game will draw if there aren't any more valid moves for the current player.
 
-[Available to play at here.](ghwang28.github.io/tic-tac-toe-capture/)
+[Available to play at here.](https://ghwang28.github.io/tic-tac-toe-capture/)
