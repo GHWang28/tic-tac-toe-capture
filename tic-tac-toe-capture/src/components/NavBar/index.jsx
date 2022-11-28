@@ -12,10 +12,11 @@ function NavBar ({ error, playerTurn, resetButton, undoButton, infoButton }) {
             left: '50%',
             translate: '-50%',
             bgcolor: 'rgba(55,0,0,0.75)',
-            maxWidth: '40vw'
+            maxWidth: '40vw',
+            maxHeight: '100%'
           }}
         >
-          <Typography fontSize={15} sx={{ color: 'whitesmoke' }} fontWeight={'bold'}>
+          <Typography fontSize={'1.5vh'} sx={{ color: 'whitesmoke' }} fontWeight={'bold'}>
             {error}
           </Typography>
         </Alert>
@@ -28,21 +29,13 @@ function NavBar ({ error, playerTurn, resetButton, undoButton, infoButton }) {
           {'Capture'}
         </Typography>
       </Box>
-      <Box my={0.5} mr={2}>
-        <Typography fontSize={'2vh'} align='right'>
-          {`Player ${playerTurn + 1}'s`}
-        </Typography>
-        <Typography fontWeight='bold' fontSize={'2vh'} align='right'>
-          {'Turn'}
-        </Typography>
-      </Box>
-      <Box ml={2}>
+      <Box ml={1}>
         {infoButton}
       </Box>
-      <Box ml={2}>
+      <Box ml={1}>
         {undoButton}
       </Box>
-      <Box ml={2}>
+      <Box ml={1}>
         {resetButton}
       </Box>
     </Box>
