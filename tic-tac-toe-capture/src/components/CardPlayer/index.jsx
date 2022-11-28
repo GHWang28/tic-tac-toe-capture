@@ -3,6 +3,7 @@ import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import { Box } from '@mui/material';
 import { useSpring, animated } from 'react-spring';
+import PropTypes from 'prop-types';
 
 function CardPlayer({ id, size, playerNo, disabled = false, dim, cardNo = 0 }) {
   // Used to give shadow when being dragged around
@@ -91,5 +92,15 @@ function CardPlayer({ id, size, playerNo, disabled = false, dim, cardNo = 0 }) {
     />
   );
 }
+
+CardPlayer.propTypes = {
+  id: PropTypes.string,
+  size: PropTypes.number,
+  playerNo: PropTypes.number,
+  disabled: PropTypes.bool,
+  dim: PropTypes.number,
+  cardNo: PropTypes.number
+}
+
 
 export default CardPlayer;

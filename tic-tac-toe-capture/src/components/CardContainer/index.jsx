@@ -1,5 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function CardContainer ({ children, isTurn, playerNo }) {
   return (
@@ -10,11 +11,11 @@ function CardContainer ({ children, isTurn, playerNo }) {
         bgcolor: 'rgba(255,255,255,0.1)',
         display: 'flex',
         justifyContent: 'center',
-        gap: '20px',
+        gap: '10px',
         alignItems: 'center',
         borderRadius: '15px',
         border: '1px solid whitesmoke',
-        opacity: (isTurn) ? '1.0' : '0.5',
+        opacity: (isTurn) ? '1.0' : '0.25',
         transition: 'opacity 0.2s ease-out',
         pointerEvents: (isTurn) ? '' : 'none',
         position: 'relative'
@@ -26,6 +27,15 @@ function CardContainer ({ children, isTurn, playerNo }) {
       </Typography>
     </Box>
   )
+}
+
+CardContainer.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]),
+  isTurn: PropTypes.bool,
+  playerNo: PropTypes.number
 }
 
 export default CardContainer;

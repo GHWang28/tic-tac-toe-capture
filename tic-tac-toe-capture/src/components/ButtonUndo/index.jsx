@@ -1,5 +1,6 @@
 import { IconButton } from "@mui/material";
 import UndoIcon from '@mui/icons-material/Undo';
+import PropTypes from 'prop-types';
 
 function ButtonUndo ({ onClick, disabled }) {
   return (
@@ -12,6 +13,11 @@ function ButtonUndo ({ onClick, disabled }) {
       <UndoIcon />
     </IconButton>
   )
+}
+
+ButtonUndo.propTypes = {
+  onClick: PropTypes.func,
+  disabled: PropTypes.bool
 }
 
 export default ButtonUndo;

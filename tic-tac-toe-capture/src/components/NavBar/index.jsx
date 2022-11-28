@@ -1,6 +1,7 @@
 import { Alert, Box, Typography } from "@mui/material";
+import PropTypes from 'prop-types';
 
-function NavBar ({ error, playerTurn, resetButton, undoButton, infoButton }) {
+function NavBar ({ error, resetButton, undoButton, infoButton }) {
   return (
     <Box px={10} sx={{ width: '100%', display: 'flex', bgcolor: '#444c57', alignItems: 'center', position: 'relative', height: '7vh'}} >
       {(error) && (
@@ -30,16 +31,23 @@ function NavBar ({ error, playerTurn, resetButton, undoButton, infoButton }) {
         </Typography>
       </Box>
       <Box ml={1}>
-        {infoButton}
-      </Box>
-      <Box ml={1}>
         {undoButton}
       </Box>
       <Box ml={1}>
         {resetButton}
       </Box>
+      <Box ml={1}>
+        {infoButton}
+      </Box>
     </Box>
   )
+}
+
+NavBar.propTypes = {
+  error: PropTypes.string,
+  resetButton: PropTypes.element,
+  undoButton: PropTypes.element,
+  infoButton: PropTypes.element
 }
 
 export default NavBar;

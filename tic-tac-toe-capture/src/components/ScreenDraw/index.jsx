@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { useSpring, animated } from "react-spring";
+import PropTypes from 'prop-types';
 
 function ScreenDraw ({ resetButton }) {
   const AnimatedBox = animated(Box);
@@ -35,6 +36,10 @@ function ScreenDraw ({ resetButton }) {
       {resetButton}
     </AnimatedBox>
   );
+}
+
+ScreenDraw.propTypes = {
+  resetButton: PropTypes.element
 }
 
 export default ScreenDraw;

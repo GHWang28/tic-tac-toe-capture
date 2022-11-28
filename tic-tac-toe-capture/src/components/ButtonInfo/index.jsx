@@ -1,5 +1,6 @@
 import { IconButton } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
+import PropTypes from 'prop-types';
 
 function ButtonInfo ({ onClick }) {
   return (
@@ -11,6 +12,10 @@ function ButtonInfo ({ onClick }) {
       <InfoIcon />
     </IconButton>
   )
+}
+
+ButtonInfo.propTypes = {
+  onClick: PropTypes.func
 }
 
 export default ButtonInfo;

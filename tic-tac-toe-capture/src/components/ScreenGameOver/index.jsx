@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { useSpring, animated } from "react-spring";
+import PropTypes from 'prop-types';
 
 function ScreenGameOver ({ winner, resetButton }) {
   const AnimatedBox = animated(Box);
@@ -35,6 +36,11 @@ function ScreenGameOver ({ winner, resetButton }) {
       {resetButton}
     </AnimatedBox>
   );
+}
+
+ScreenGameOver.propTypes = {
+  winner: PropTypes.number,
+  resetButton: PropTypes.element
 }
 
 export default ScreenGameOver;

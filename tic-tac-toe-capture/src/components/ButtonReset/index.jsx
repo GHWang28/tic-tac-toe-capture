@@ -1,5 +1,6 @@
 import { IconButton } from "@mui/material";
 import ReplayIcon from '@mui/icons-material/Replay';
+import PropTypes from 'prop-types';
 
 function ButtonReset ({ onClick }) {
   return (
@@ -11,6 +12,10 @@ function ButtonReset ({ onClick }) {
       <ReplayIcon />
     </IconButton>
   )
+}
+
+ButtonReset.propTypes = {
+  onClick: PropTypes.func
 }
 
 export default ButtonReset;
