@@ -15,6 +15,17 @@ import ErrorSfx from './sfx/error.ogg'
 import ButtonUndo from './components/ButtonUndo';
 import ScreenHowToPlay from './components/ScreenHowToPlay';
 import ButtonInfo from './components/ButtonInfo';
+import ScreenDraw from './components/ScreenDraw';
+
+const DRAW = -999999;
+
+const genCardID = (number, size, player) => (
+  JSON.stringify({
+    number,
+    size,
+    player
+  })
+)
 
 function App() {
   const dimension = 3;
@@ -22,6 +33,14 @@ function App() {
   const totalSizes = 3;
   const totalCardsPerSize = 2;
   const boardVisualDim = '60vh';
+  const allCards = [];
+  [...Array(totalPlayers).keys()].forEach((playerNo) => {
+    [...Array(totalSizes).keys()].forEach((size) => {
+      [...Array(totalCardsPerSize).keys()].forEach((cardNo) => {
+        allCards.push(genCardID(cardNo, size, playerNo));
+      })
+    })
+  })
 
   const [playCardSfx] = useSound(CardSfx);
   const [playErrorSfx] = useSound(ErrorSfx);
@@ -104,13 +123,15 @@ function App() {
             sx={{
               height: boardVisualDim,
               width: boardVisualDim,
-              border: '1px solid whitesmoke',
-              borderRadius: '15px',
+              borderRadius: '5px',
               overflow: 'hidden',
               position: 'relative'
             }}
           >
-            {(winner >= 0) && (
+            {(winner === DRAW) && (
+              <ScreenDraw resetButton={resetButton} />
+            )}
+            {(winner >= 0 && winner < totalPlayers) && (
               <ScreenGameOver winner={winner} resetButton={resetButton} />
             )}
             {(showInfoScreen) && (
@@ -122,7 +143,7 @@ function App() {
                 item
                 xs={ 12 / dimension }
                 sx={{
-                  border: '1px solid whitesmoke',
+                  border: '2px solid whitesmoke',
                   height: `calc(${boardVisualDim} / ${dimension} )`
                   // bgcolor: (index % 2) ? 'rgba(255,255,255,0.1)' : ''
                 }}
@@ -157,12 +178,12 @@ function App() {
                 {/* Creating the totalSizes * totalCardsPerSize amount of cards */}
                 {[...Array(totalSizes).keys()].map((size, index) => (
                   [...Array(totalCardsPerSize)].map((_, cardNo) => (
-                    (!usedCards.includes(`card-${cardNo}-p${playerNo}-s${size}`)) && (
+                    (!usedCards.includes(genCardID(cardNo, size, playerNo))) && (
                       <CardPlayer
-                        id={`card-${cardNo}-p${playerNo}-s${size}`}
+                        id={genCardID(cardNo, size, playerNo)}
+                        key={genCardID(cardNo, size, playerNo)}
                         size={size}
                         playerNo={playerNo}
-                        key={`card-${cardNo}-p${playerNo}-s${size}`}
                         dim={containerHeight}
                         cardNo={(index * totalCardsPerSize) + cardNo}
                         disabled={winner >= 0}
@@ -219,12 +240,16 @@ function App() {
     const [ placedX, placedY ] = [targetCellNo % dimension, Math.floor(targetCellNo / dimension)];
     while (gameboardCopy.length) gameboard2D.push(gameboardCopy.splice(0, dimension));
 
+    const triggerWin = () => {
+      setWinner(playerTurn);
+      setLetUndo(false);
+    }
+
     // Checking the row of the last placed card
     for (let x = 0; x < dimension; x++) {
       if (gameboard2D[placedY][x]?.playerNo !== playerTurn) break;
       if (x === dimension - 1)  {
-        setWinner(playerTurn);
-        setLetUndo(false);
+        triggerWin();
         return;
       }
     }
@@ -232,8 +257,7 @@ function App() {
     for (let y = 0; y < dimension; y++) {
       if (gameboard2D[y][placedX]?.playerNo !== playerTurn) break;
       if (y === dimension - 1) {
-        setWinner(playerTurn);
-        setLetUndo(false);
+        triggerWin();
         return;
       }
     }
@@ -242,8 +266,7 @@ function App() {
       for (let coord = 0; coord < dimension; coord++) {
         if (gameboard2D[coord][coord]?.playerNo !== playerTurn) break;
         if (coord === dimension - 1)  {
-          setWinner(playerTurn);
-          setLetUndo(false);
+          triggerWin();
           return;
         }
       }
@@ -253,12 +276,38 @@ function App() {
       for (let coord = 0; coord < dimension; coord++){
         if (gameboard2D[coord][(dimension - 1) - coord]?.playerNo !== playerTurn) break;
         if (coord === dimension - 1)  {
-          setWinner(playerTurn);
-          setLetUndo(false);
+          triggerWin();
           return;
         }
       }
     }
+    // Check for draw
+
+    // Get all unused cards
+    const unusedCards = allCards
+      .filter(card => ![...usedCards, active.id].includes(card))
+    let foundPossibleMove = false;
+
+    unusedCards.forEach((card) => {
+      if (foundPossibleMove) return;
+
+      const cardData = JSON.parse(card);
+      // Check for next player
+      if (cardData.player === (playerTurn + 1) % totalPlayers) {
+        newGameboard.forEach((cell) => {
+          if (!cell || cell?.size < cardData.size) {
+            foundPossibleMove = true;
+          }
+        })
+      }
+    })
+    // Possible move not found, draw the game
+    if (!foundPossibleMove) {
+      setWinner(DRAW);
+      setLetUndo(false);
+      return;
+    }
+
     setPlayerTurn((playerTurn + 1) % totalPlayers);
     setLetUndo(true);
   }

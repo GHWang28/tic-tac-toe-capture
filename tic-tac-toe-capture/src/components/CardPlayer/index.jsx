@@ -59,8 +59,8 @@ function CardPlayer({ id, size, playerNo, disabled = false, dim, cardNo = 0 }) {
 
   const calcDim = () => {
     switch (size) {
-      case 0: return 0.25 * dim;
-      case 1: return 0.55 * dim;
+      case 0: return 0.35 * dim;
+      case 1: return 0.60 * dim;
       default: return 0.85 * dim;
     }
   }
@@ -82,7 +82,7 @@ function CardPlayer({ id, size, playerNo, disabled = false, dim, cardNo = 0 }) {
         height: calcDim(),
         border: '1px solid whitesmoke',
         cursor: (disabled) ? 'default' : 'pointer',
-        borderRadius: '15px',
+        borderRadius: '2vh',
         backgroundImage: getSymbol(),
         backgroundSize: '75% 75%',
         backgroundRepeat: 'no-repeat',

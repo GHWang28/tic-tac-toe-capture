@@ -24,7 +24,7 @@ function ScreenHowToPlay () {
       }}
     >
       <Typography
-        fontSize={'2.5vh'}
+        fontSize={'3.5vh'}
         align='center'
         sx={{
           textShadow: '2px 2px black',
@@ -40,27 +40,27 @@ function ScreenHowToPlay () {
         src={'images/win.jpg'}
       />
       <Typography
-        mt={1}
+        mt={'0.5vh'}
         fontSize={'2vh'}
         align='center'
       >
         {'Like with classic Tic Tac Toe, get a line of three to win.'}
       </Typography>
       <Box
-        sx={{ height: '35%' }}
+        sx={{ height: '20%' }}
         component='img'
         alt='How to Win'
         src={'images/capture.png'}
       />
       <Typography
-        mt={1}
+        mt={'0.5vh'}
         fontSize={'2vh'}
         align='center'
       >
         {'You can capture your opponent\'s cards by placing a bigger card over your opponent\'s card.'}
       </Typography>
       <Typography
-        mt={2}
+        mt={'1vh'}
         fontSize={'1.7vh'}
         align='center'
       >
