@@ -60,9 +60,9 @@ function CardPlayer({ id, size, playerNo, disabled = false, dim, cardNo = 0 }) {
 
   const calcDim = () => {
     switch (size) {
-      case 0: return 0.35 * dim;
-      case 1: return 0.60 * dim;
-      default: return 0.85 * dim;
+      case 0: return 0.30 * dim;
+      case 1: return 0.55 * dim;
+      default: return 0.90 * dim;
     }
   }
 
@@ -101,6 +101,5 @@ CardPlayer.propTypes = {
   dim: PropTypes.number,
   cardNo: PropTypes.number
 }
-
 
 export default CardPlayer;
