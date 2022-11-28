@@ -1,16 +1,16 @@
 import { IconButton } from "@mui/material";
-import ReplayIcon from '@mui/icons-material/Replay';
+import InfoIcon from '@mui/icons-material/Info';
 
-function ButtonReset ({ onClick }) {
+function ButtonInfo ({ onClick }) {
   return (
     <IconButton
       onClick={onClick}
       sx={{ color: 'white', border: '2px solid whitesmoke' }}
-      title='Reset Game'
+      title='How To Play'
     >
-      <ReplayIcon fontSize='large'/>
+      <InfoIcon fontSize='large'/>
     </IconButton>
   )
 }
 
-export default ButtonReset;
+export default ButtonInfo;

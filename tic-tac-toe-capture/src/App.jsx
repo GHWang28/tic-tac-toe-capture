@@ -1,13 +1,20 @@
 import './App.css';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Box, Grid, Typography } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { DndContext } from '@dnd-kit/core';
 import CardPlayer from './components/CardPlayer';
 import Cell from './components/Cell';
 import CardContainer from './components/CardContainer';
 import ButtonReset from './components/ButtonReset';
 import useSound from 'use-sound';
+import ScreenGameOver from './components/ScreenGameOver';
+import NavBar from './components/NavBar';
+
 import CardSfx from './sfx/card.ogg'
+import ErrorSfx from './sfx/error.ogg'
+import ButtonUndo from './components/ButtonUndo';
+import ScreenHowToPlay from './components/ScreenHowToPlay';
+import ButtonInfo from './components/ButtonInfo';
 
 function App() {
   const dimension = 3;
@@ -17,15 +24,20 @@ function App() {
   const boardVisualDim = '60vh';
 
   const [playCardSfx] = useSound(CardSfx);
+  const [playErrorSfx] = useSound(ErrorSfx);
 
   const [containerHeight, setContainerHeight] = useState(0);
   const ref = useRef(null);
 
   const [gameboard, setGameboard] = useState(Array(dimension * dimension).fill(null));
+  const [prevGameboard, setPrevGameboard] = useState(Array(dimension * dimension).fill(null));
+  const [prevUsedCards, setPrevUsedCards] = useState([]);
   const [usedCards, setUsedCards] = useState([]);
-  const [playerTurn, setPlayerTurn] = useState(totalPlayers - 1);
+  const [playerTurn, setPlayerTurn] = useState(0);
   const [error, setError] = useState(null);
-
+  const [winner, setWinner] = useState(-1);
+  const [letUndo, setLetUndo] = useState(false);
+  const [showInfoScreen, setShowInfoScreen] = useState(false);
 
   // Update the height of the card containers
   useEffect(() => {
@@ -35,6 +47,38 @@ function App() {
     window.addEventListener("resize", handleResize);
     handleResize();
   }, []);
+
+  const resetButton = (
+    <ButtonReset
+      onClick={() => {
+        setGameboard(Array(dimension * dimension).fill(null));
+        setUsedCards([]);
+        setPlayerTurn(0);
+        setError(null);
+        setWinner(-1);
+      }}
+    />
+  )
+
+  const undoButton = (
+    <ButtonUndo
+      disabled={ !letUndo }
+      onClick={() => {
+        setLetUndo(false);
+        setGameboard([...prevGameboard]);
+        setUsedCards([...prevUsedCards]);
+        setPlayerTurn((((playerTurn - 1) % totalPlayers) + totalPlayers) % totalPlayers);
+      }}
+    />
+  )
+
+  const infoButton = (
+    <ButtonInfo
+      onClick={() => {
+        setShowInfoScreen(!showInfoScreen);
+      }}
+    />
+  )
 
   // App Structure
   return (
@@ -53,33 +97,7 @@ function App() {
       >
         {/* Upper section */}
         <Box sx={{ width: '98vw', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Box px={10} sx={{ width: '100%', display: 'flex', bgcolor: '#444c57', alignItems: 'center', position: 'relative'}} >
-            {(error) && (
-              <Alert
-                severity='error'
-                variant='outlined'
-                sx={{ position: 'absolute', left: '50%', translate: '-50%', bgcolor: 'rgba(55,0,0,0.75)'}}
-              >
-                <Typography sx={{ color: 'whitesmoke' }} fontWeight={'bold'}>
-                  {error}
-                </Typography>
-              </Alert>
-            )}
-            <Typography fontSize={30} align='center' my={0.5} mr='auto'>
-              {'Tic-Tac-Toe Capture'}
-            </Typography>
-            <Typography fontSize={20} align='center' my={0.5} ml='auto' mr={5}>
-              {`Player ${playerTurn + 1}'s turn`}
-            </Typography>
-            <ButtonReset
-              onClick={() => {
-                setGameboard(Array(dimension * dimension).fill(null));
-                setUsedCards([]);
-                setPlayerTurn(0);
-                setError(null);
-              }}
-            />
-          </Box>
+          <NavBar error={error} playerTurn={playerTurn} resetButton={resetButton} undoButton={undoButton} infoButton={infoButton} />
           {/* Grid containing the playing board */}
           <Grid
             container
@@ -88,9 +106,16 @@ function App() {
               width: boardVisualDim,
               border: '1px solid whitesmoke',
               borderRadius: '15px',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              position: 'relative'
             }}
           >
+            {(winner >= 0) && (
+              <ScreenGameOver winner={winner} resetButton={resetButton} />
+            )}
+            {(showInfoScreen) && (
+              <ScreenHowToPlay />
+            )}
             {[...Array(dimension * dimension)].map((_, index) => (
               <Grid
                 key={`cell-${index}`}
@@ -128,7 +153,7 @@ function App() {
         >
           {([...Array(totalPlayers)].map((_, playerNo) => (
             <Box key={`player-${playerNo}-cards`} ref={ref} sx={{ height: `${(100 / totalPlayers) - 5}%` }}>
-              <CardContainer isTurn={playerNo === playerTurn}>
+              <CardContainer isTurn={playerNo === playerTurn} playerNo={playerNo}>
                 {/* Creating the totalSizes * totalCardsPerSize amount of cards */}
                 {[...Array(totalSizes).keys()].map((size, index) => (
                   [...Array(totalCardsPerSize)].map((_, cardNo) => (
@@ -140,6 +165,7 @@ function App() {
                         key={`card-${cardNo}-p${playerNo}-s${size}`}
                         dim={containerHeight}
                         cardNo={(index * totalCardsPerSize) + cardNo}
+                        disabled={winner >= 0}
                       />
                     )
                   ))
@@ -160,14 +186,16 @@ function App() {
     const droppedCardData =  active?.data?.current;
 
     if (gameboard[targetCellNo]?.playerNo === droppedCardData?.playerNo) {
-      setError('You can not place a card over your own.')
+      setError('You can not place a card over your own.');
+      playErrorSfx();
       return;
     }
 
     // Checking if the placed cell already has a card placed
     // that is bigger
     if (gameboard[targetCellNo]?.size >= droppedCardData?.size) {
-      setError('Your card is not big enough to be placed over this one.')
+      setError('Your card is not big enough to be placed over this one.');
+      playErrorSfx();
       return;
     }
 
@@ -178,8 +206,10 @@ function App() {
       size: droppedCardData?.size,
       playerNo: droppedCardData?.playerNo,
     }
+    setPrevGameboard(gameboard);
     setGameboard(newGameboard);
     setError(null);
+    setPrevUsedCards([...usedCards]);
     setUsedCards([...usedCards, active.id]);
     playCardSfx();
   
@@ -190,30 +220,43 @@ function App() {
     while (gameboardCopy.length) gameboard2D.push(gameboardCopy.splice(0, dimension));
 
     // Checking the row of the last placed card
-    for (let x = 0; x < dimension; x++){
+    for (let x = 0; x < dimension; x++) {
       if (gameboard2D[placedY][x]?.playerNo !== playerTurn) break;
-      if (x === dimension - 1) console.log(`player ${playerTurn} wins`)
+      if (x === dimension - 1)  {
+        setWinner(playerTurn);
+        return;
+      }
     }
     // Checking the column of the last placed card
-    for (let y = 0; y < dimension; y++){
+    for (let y = 0; y < dimension; y++) {
       if (gameboard2D[y][placedX]?.playerNo !== playerTurn) break;
-      if (y === dimension - 1) console.log(`player ${playerTurn} wins`)
+      if (y === dimension - 1) {
+        setWinner(playerTurn);
+        return;
+      }
     }
     // Checking diagonal top left to bottom right
     if (placedX === placedY) {
-      for (let coord = 0; coord < dimension; coord++){
+      for (let coord = 0; coord < dimension; coord++) {
         if (gameboard2D[coord][coord]?.playerNo !== playerTurn) break;
-        if (coord === dimension - 1) console.log(`player ${playerTurn} wins`)
+        if (coord === dimension - 1)  {
+          setWinner(playerTurn);
+          return;
+        }
       }
     }
     // Checking diagonal top right to bottom right
     if (placedX + placedY === dimension - 1) {
       for (let coord = 0; coord < dimension; coord++){
         if (gameboard2D[coord][(dimension - 1) - coord]?.playerNo !== playerTurn) break;
-        if (coord === dimension - 1) console.log(`player ${playerTurn} wins`)
+        if (coord === dimension - 1)  {
+          setWinner(playerTurn);
+          return;
+        }
       }
     }
     setPlayerTurn((playerTurn + 1) % totalPlayers);
+    setLetUndo(true);
   }
 }
 

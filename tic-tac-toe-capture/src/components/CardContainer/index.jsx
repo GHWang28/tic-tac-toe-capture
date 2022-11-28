@@ -1,7 +1,7 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 
-function CardContainer ({ children, isTurn }) {
+function CardContainer ({ children, isTurn, playerNo }) {
   return (
     <Box
       sx={{
@@ -17,9 +17,13 @@ function CardContainer ({ children, isTurn }) {
         opacity: (isTurn) ? '1.0' : '0.5',
         transition: 'opacity 0.2s ease-out',
         pointerEvents: (isTurn) ? '' : 'none',
+        position: 'relative'
       }}
     >
       {children}
+      <Typography pl={2} pt={0.5} sx={{ zIndex: -1, position: 'absolute', top: 0, left: 0, opacity: 0.25 }} fontSize={'3vh'}>
+        {`Player ${playerNo + 1}'s Cards`}
+      </Typography>
     </Box>
   )
 }
