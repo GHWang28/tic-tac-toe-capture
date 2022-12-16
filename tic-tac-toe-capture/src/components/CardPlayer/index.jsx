@@ -5,14 +5,14 @@ import { Box } from '@mui/material';
 import { useSpring, animated } from 'react-spring';
 import PropTypes from 'prop-types';
 
-function CardPlayer({ id, size, playerNo, disabled = false, dim, cardNo = 0 }) {
+function CardPlayer({ id, size, playerNo, disabled = false, cardNo = 0 }) {
   // Used to give shadow when being dragged around
   const [mouseDown, setMouseDown] = useState(false);
 
   const animationProps = useSpring({
-    from: { opacity: 0, x: 100, y: -50, rotate: 45, scale: 1.05 },
-    to: { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 },
-    delay: cardNo * 100
+    from: { scale: 0 },
+    to: { scale: 1 },
+    delay: cardNo * 75
   })
   const placeAnimationProps = useSpring({
     from: { scale: 1.05 },
@@ -60,9 +60,9 @@ function CardPlayer({ id, size, playerNo, disabled = false, dim, cardNo = 0 }) {
 
   const calcDim = () => {
     switch (size) {
-      case 0: return 0.30 * dim;
-      case 1: return 0.60 * dim;
-      default: return 0.90 * dim;
+      case 0: return 'min(9vw,4vh)';
+      case 1: return 'min(14vw,9vh)';
+      default: return 'min(22vw,14vh)';
     }
   }
 

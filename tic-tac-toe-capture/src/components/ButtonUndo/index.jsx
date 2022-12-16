@@ -7,7 +7,7 @@ function ButtonUndo ({ onClick, disabled }) {
     <IconButton
       disabled={disabled}
       onClick={onClick}
-      sx={{ color: 'white', border: '2px solid whitesmoke' }}
+      sx={{ color: 'white', border: (disabled) ? '2px solid gray' : '2px solid whitesmoke' }}
       title='Reverses the immediate previous move'
     >
       <UndoIcon />

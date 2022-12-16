@@ -11,14 +11,14 @@ function CardContainer ({ children, isTurn, playerNo }) {
         bgcolor: 'rgba(255,255,255,0.1)',
         display: 'flex',
         justifyContent: 'center',
-        gap: '10px',
+        gap: '3px',
         alignItems: 'center',
         borderRadius: '15px',
         border: '1px solid whitesmoke',
         opacity: (isTurn) ? '1.0' : '0.25',
         transition: 'opacity 0.2s ease-out',
         pointerEvents: (isTurn) ? '' : 'none',
-        position: 'relative'
+        position: 'relative',
       }}
     >
       {children}

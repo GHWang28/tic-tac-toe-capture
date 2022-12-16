@@ -1,5 +1,6 @@
 import './App.css';
-import React, { useEffect, useRef, useState } from 'react';
+import 'react-toastify/dist/ReactToastify.css';
+import React, { useState } from 'react';
 import { Box, Grid } from '@mui/material'
 import {
   DndContext,
@@ -22,8 +23,14 @@ import ButtonUndo from './components/ButtonUndo';
 import ScreenHowToPlay from './components/ScreenHowToPlay';
 import ButtonInfo from './components/ButtonInfo';
 import ScreenDraw from './components/ScreenDraw';
+import { toast } from 'react-toastify';
 
 const DRAW = -999999;
+const dimension = 3;
+const totalPlayers = 2;
+const totalSizes = 3;
+const totalCardsPerSize = 2;
+const boardVisualDim = 'min(60vh,95vw)';
 
 const genCardID = (number, size, player) => (
   JSON.stringify({
@@ -34,11 +41,7 @@ const genCardID = (number, size, player) => (
 )
 
 function App() {
-  const dimension = 3;
-  const totalPlayers = 2;
-  const totalSizes = 3;
-  const totalCardsPerSize = 2;
-  const boardVisualDim = '60vh';
+  
   const allCards = [];
   [...Array(totalPlayers).keys()].forEach((playerNo) => {
     [...Array(totalSizes).keys()].forEach((size) => {
@@ -58,28 +61,15 @@ function App() {
   const [playCardSfx] = useSound(CardSfx);
   const [playErrorSfx] = useSound(ErrorSfx);
 
-  // Height of card containers
-  const [containerHeight, setContainerHeight] = useState(0);
-  const ref = useRef(null);
-
+  // States and hooks
   const [gameboard, setGameboard] = useState(Array(dimension * dimension).fill(null));
   const [prevGameboard, setPrevGameboard] = useState(Array(dimension * dimension).fill(null));
   const [prevUsedCards, setPrevUsedCards] = useState([]);
   const [usedCards, setUsedCards] = useState([]);
   const [playerTurn, setPlayerTurn] = useState(0);
-  const [error, setError] = useState(null);
   const [winner, setWinner] = useState(-1);
   const [letUndo, setLetUndo] = useState(false);
   const [showInfoScreen, setShowInfoScreen] = useState(false);
-
-  // Update the height of the card containers
-  useEffect(() => {
-    const handleResize = () => {
-      setContainerHeight(ref?.current?.clientHeight);
-    }
-    window.addEventListener("resize", handleResize);
-    handleResize();
-  }, []);
 
   const resetButton = (
     <ButtonReset
@@ -87,7 +77,6 @@ function App() {
         setGameboard(Array(dimension * dimension).fill(null));
         setUsedCards([]);
         setPlayerTurn(0);
-        setError(null);
         setWinner(-1);
       }}
     />
@@ -130,7 +119,7 @@ function App() {
       >
         {/* Upper section */}
         <Box sx={{ width: '98vw', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <NavBar error={error} playerTurn={playerTurn} resetButton={resetButton} undoButton={undoButton} infoButton={infoButton} />
+          <NavBar playerTurn={playerTurn} resetButton={resetButton} undoButton={undoButton} infoButton={infoButton} />
           {/* Grid containing the playing board */}
           <Grid
             container
@@ -167,7 +156,6 @@ function App() {
                     <CardPlayer
                       {...gameboard[index]}
                       disabled={true}
-                      dim={containerHeight}
                     />
                   )}
                 </Cell>
@@ -187,7 +175,7 @@ function App() {
           }}
         >
           {([...Array(totalPlayers)].map((_, playerNo) => (
-            <Box key={`player-${playerNo}-cards`} ref={ref} sx={{ height: `${(100 / totalPlayers) - 5}%` }}>
+            <Box key={`player-${playerNo}-cards`} sx={{ height: `${(100 / totalPlayers) - 5}%` }}>
               <CardContainer isTurn={playerNo === playerTurn} playerNo={playerNo}>
                 {/* Creating the totalSizes * totalCardsPerSize amount of cards */}
                 {[...Array(totalSizes).keys()].map((size, index) => (
@@ -198,7 +186,6 @@ function App() {
                         key={genCardID(cardNo, size, playerNo)}
                         size={size}
                         playerNo={playerNo}
-                        dim={containerHeight}
                         cardNo={(index * totalCardsPerSize) + cardNo}
                         disabled={winner >= 0}
                       />
@@ -221,7 +208,7 @@ function App() {
     const droppedCardData =  active?.data?.current;
 
     if (gameboard[targetCellNo]?.playerNo === droppedCardData?.playerNo) {
-      setError('You can not place a card over your own.');
+      toast.error('You can not place a card over your own.');
       playErrorSfx();
       return;
     }
@@ -229,7 +216,7 @@ function App() {
     // Checking if the placed cell already has a card placed
     // that is bigger
     if (gameboard[targetCellNo]?.size >= droppedCardData?.size) {
-      setError('Your card is not big enough to be placed over this one.');
+      toast.error('Your card is not big enough to be placed over this one.');
       playErrorSfx();
       return;
     }
@@ -243,7 +230,6 @@ function App() {
     }
     setPrevGameboard(gameboard);
     setGameboard(newGameboard);
-    setError(null);
     setPrevUsedCards([...usedCards]);
     setUsedCards([...usedCards, active.id]);
     playCardSfx();
@@ -315,15 +301,14 @@ function App() {
         })
       }
     })
+
+    setPlayerTurn((playerTurn + 1) % totalPlayers);
     // Possible move not found, draw the game
     if (!foundPossibleMove) {
       setWinner(DRAW);
       setLetUndo(false);
-      setPlayerTurn((playerTurn + 1) % totalPlayers);
       return;
     }
-
-    setPlayerTurn((playerTurn + 1) % totalPlayers);
     setLetUndo(true);
   }
 }
