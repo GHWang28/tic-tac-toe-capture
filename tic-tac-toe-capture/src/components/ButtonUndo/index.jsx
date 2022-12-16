@@ -1,4 +1,4 @@
-import { IconButton } from "@mui/material";
+import { IconButton } from '@mui/material';
 import UndoIcon from '@mui/icons-material/Undo';
 import PropTypes from 'prop-types';
 

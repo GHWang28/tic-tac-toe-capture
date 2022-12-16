@@ -1,6 +1,6 @@
 {
   "name": "tic-tac-toe-capture",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "homepage": "https://GHWang28.github.io/tic-tac-toe-capture",
   "private": true,
   "dependencies": {

@@ -1,4 +1,4 @@
-import { IconButton } from "@mui/material";
+import { IconButton } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import PropTypes from 'prop-types';
 

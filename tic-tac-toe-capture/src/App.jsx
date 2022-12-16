@@ -134,6 +134,7 @@ function App() {
             <ScreenDraw resetButton={resetButton} display={winner === DRAW} />
             <ScreenGameOver winner={winner} resetButton={resetButton} display={winner >= 0 && winner < totalPlayers} />
             <ScreenHowToPlay display={showInfoScreen}/>
+            {/* Drawing the tic tac toe grid */}
             {[...Array(dimension * dimension)].map((_, index) => (
               <Grid
                 key={`cell-${index}`}
@@ -142,7 +143,6 @@ function App() {
                 sx={{
                   border: '2px solid whitesmoke',
                   height: `calc(${boardVisualDim} / ${dimension} )`
-                  // bgcolor: (index % 2) ? 'rgba(255,255,255,0.1)' : ''
                 }}
               >
                 <Cell id={`cell-id-${index}`} cellNo={index}>

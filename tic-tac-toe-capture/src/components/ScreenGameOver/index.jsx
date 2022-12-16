@@ -1,5 +1,5 @@
-import { Box, Typography } from "@mui/material";
-import { useTransition, animated } from "react-spring";
+import { Box, Typography } from '@mui/material';
+import { useTransition, animated } from 'react-spring';
 import PropTypes from 'prop-types';
 
 function ScreenGameOver ({ winner, resetButton, display }) {
