@@ -6,8 +6,6 @@ import { useSpring, animated } from 'react-spring';
 import PropTypes from 'prop-types';
 
 function CardPlayer({ id, size, playerNo, disabled = false, cardNo = 0 }) {
-  // Used to give shadow when being dragged around
-  const [mouseDown, setMouseDown] = useState(false);
 
   const animationProps = useSpring({
     from: { scale: 0 },
@@ -69,15 +67,11 @@ function CardPlayer({ id, size, playerNo, disabled = false, cardNo = 0 }) {
   return (
     <AnimatedBox
       style={(!animationFinish) ? ((disabled) ? placeAnimationProps : animationProps) : null}
-      onMouseDown={() => { if (!disabled) setMouseDown(true) }}
-      onMouseUp={() => { if (!disabled) setMouseDown(false) }}
       ref={setNodeRef}
       {...listeners}
       {...attributes}
       sx={{
         transform: CSS.Translate.toString(transform),
-        boxShadow: (mouseDown) ? '0px 0px 30px 15px rgba(0,0,0,0.75)' : '',
-        transition: (mouseDown) ? 'box-shadow 0.1s ease-in-out' : 'transform 0.1s ease-out, box-shadow 0.1s ease-in-out',
         bgcolor: getColor(),
         width: calcDim(),
         height: calcDim(),

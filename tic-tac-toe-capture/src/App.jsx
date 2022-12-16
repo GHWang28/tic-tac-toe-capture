@@ -131,15 +131,9 @@ function App() {
               position: 'relative'
             }}
           >
-            {(winner === DRAW) && (
-              <ScreenDraw resetButton={resetButton} />
-            )}
-            {(winner >= 0 && winner < totalPlayers) && (
-              <ScreenGameOver winner={winner} resetButton={resetButton} />
-            )}
-            {(showInfoScreen) && (
-              <ScreenHowToPlay />
-            )}
+            <ScreenDraw resetButton={resetButton} display={winner === DRAW} />
+            <ScreenGameOver winner={winner} resetButton={resetButton} display={winner >= 0 && winner < totalPlayers} />
+            <ScreenHowToPlay display={showInfoScreen}/>
             {[...Array(dimension * dimension)].map((_, index) => (
               <Grid
                 key={`cell-${index}`}
