@@ -6,16 +6,16 @@ import { useSpring, animated } from 'react-spring';
 import PropTypes from 'prop-types';
 
 function CardPlayer({ id, size, playerNo, disabled = false, cardNo = 0 }) {
-
   const animationProps = useSpring({
     from: { scale: 0 },
     to: { scale: 1 },
     delay: cardNo * 75
-  })
+  });
   const placeAnimationProps = useSpring({
     from: { scale: 1.05 },
     to: { scale: 1 },
-  })
+  });
+  const AnimatedBox = animated(Box);
 
   // Clears the animation props so that it can be dragged around
   const [animationFinish, setAnimationFinish] = useState(false);
@@ -26,8 +26,6 @@ function CardPlayer({ id, size, playerNo, disabled = false, cardNo = 0 }) {
 
     return () => { clearTimeout(timeout) };
   }, [cardNo])
-
-  const AnimatedBox = animated(Box);
 
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
     id,
